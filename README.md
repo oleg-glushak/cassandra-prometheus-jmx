@@ -5,6 +5,8 @@ Grafana dashboad can be found here: https://grafana.com/dashboards/5408
 How to quickly set-up everything: https://www.robustperception.io/monitoring-cassandra-with-prometheus/
 
 Metrics description:
+
+ - http://cassandra.apache.org/doc/latest/operating/metrics.html
  - https://medium.com/@mlowicki/cassandra-metrics-and-their-use-in-grafana-1f0dc33f9cca
  - https://www.datadoghq.com/blog/how-to-monitor-cassandra-performance-metrics/
  - https://blog.pythian.com/guide-to-cassandra-thread-pools/
@@ -78,4 +80,4 @@ Tested on:
  - Prometheus v2.2
  - Grafana v5.0
  - JMX exporter v0.3.0
- - Cassandra v3.11
+ - Apache Cassandra v3.11
