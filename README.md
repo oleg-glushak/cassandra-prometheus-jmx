@@ -1,4 +1,4 @@
-# cassandra-prometheus-jmx
+# Monitoring Cassandra with Prometheus using JXM exporter
 
 Grafana dashboad can be found here: https://grafana.com/dashboards/5408
 
