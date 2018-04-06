@@ -91,7 +91,8 @@ rules:
     name: cassandra_$1_$5
     labels:
       "$1": "$4"
-      "$2": "$3"```
+      "$2": "$3"
+      ```
       
 Tested on:
  - Prometheus v2.2
