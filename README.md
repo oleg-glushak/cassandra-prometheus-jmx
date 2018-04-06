@@ -18,8 +18,6 @@ Prometheus JMX exporter config:
 lowercaseOutputName: true
 lowercaseOutputLabelNames: true
 whitelistObjectNames: [
-"org.apache.cassandra.metrics:type=ColumnFamily,name=ReadLatency,*",
-"org.apache.cassandra.metrics:type=ColumnFamily,name=WriteLatency,*",
 "org.apache.cassandra.metrics:type=ColumnFamily,name=RangeLatency,*",
 "org.apache.cassandra.metrics:type=ColumnFamily,name=LiveSSTableCount,*",
 "org.apache.cassandra.metrics:type=ColumnFamily,name=SSTablesPerReadHistogram,*",
@@ -42,7 +40,6 @@ whitelistObjectNames: [
 "org.apache.cassandra.metrics:type=Compaction,name=BytesCompacted,*",
 "org.apache.cassandra.metrics:type=Compaction,name=TotalCompactionsCompleted,*",
 "org.apache.cassandra.metrics:type=ClientRequest,name=Latency,*",
-"org.apache.cassandra.metrics:type=ClientRequest,name=TotalLatency,*",
 "org.apache.cassandra.metrics:type=ClientRequest,name=Unavailables,*",
 "org.apache.cassandra.metrics:type=ClientRequest,name=Timeouts,*",
 "org.apache.cassandra.metrics:type=Storage,name=Exceptions,*",
@@ -61,14 +58,34 @@ whitelistObjectNames: [
 "org.apache.cassandra.metrics:type=Cache,scope=KeyCache,name=Requests,*",
 "org.apache.cassandra.metrics:type=Cache,scope=KeyCache,name=Entries,*",
 "org.apache.cassandra.metrics:type=Cache,scope=KeyCache,name=Size,*",
+#"org.apache.cassandra.metrics:type=Streaming,name=TotalIncomingBytes,*",
+#"org.apache.cassandra.metrics:type=Streaming,name=TotalOutgoingBytes,*",
 "org.apache.cassandra.metrics:type=Client,name=connectedNativeClients,*",
 "org.apache.cassandra.metrics:type=Client,name=connectedThriftClients,*",
+"org.apache.cassandra.metrics:type=Table,name=WriteLatency,*",
+"org.apache.cassandra.metrics:type=Table,name=ReadLatency,*",
 ]
+#blacklistObjectNames: ["org.apache.cassandra.metrics:type=ColumnFamily,*"]
 rules:
   - pattern: org.apache.cassandra.metrics<type=(Connection|Streaming), scope=(\S*), name=(\S*)><>(Count|Value)
     name: cassandra_$1_$3
     labels:
       address: "$2"
+  - pattern: org.apache.cassandra.metrics<type=(ColumnFamily), name=(RangeLatency)><>(Mean)
+    name: cassandra_$1_$2_$3
+  - pattern: org.apache.cassandra.metrics<type=(Keyspace), keyspace=(\S*), name=(\S*)><>(Count|Mean|95thPercentile)
+    name: cassandra_$1_$3_$4
+    labels:
+      "$1": "$2"
+  - pattern: org.apache.cassandra.metrics<type=(Table), keyspace=(\S*), scope=(\S*), name=(\S*)><>(Count|Mean|95thPercentile)
+    name: cassandra_$1_$4_$5
+    labels:
+      "keyspace": "$2"
+      "table": "$3"
+  - pattern: org.apache.cassandra.metrics<type=(ClientRequest), scope=(\S*), name=(\S*)><>(Count|Mean|95thPercentile)
+    name: cassandra_$1_$3_$4
+    labels:
+      "type": "$2"
   - pattern: org.apache.cassandra.metrics<type=(\S*)(?:, ((?!scope)\S*)=(\S*))?(?:, scope=(\S*))?,
       name=(\S*)><>(Count|Value)
     name: cassandra_$1_$5
