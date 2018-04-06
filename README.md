@@ -92,7 +92,7 @@ rules:
     labels:
       "$1": "$4"
       "$2": "$3"
-      ```
+```
       
 Tested on:
  - Prometheus v2.2
