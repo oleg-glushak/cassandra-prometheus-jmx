@@ -14,7 +14,7 @@ Metrics description:
  - https://aryanet.com/blog/cassandra-garbage-collector-tuning
 
 Prometheus JMX exporter config:
-```---
+```
 lowercaseOutputName: true
 lowercaseOutputLabelNames: true
 whitelistObjectNames: [
@@ -64,6 +64,7 @@ whitelistObjectNames: [
 "org.apache.cassandra.metrics:type=Client,name=connectedThriftClients,*",
 "org.apache.cassandra.metrics:type=Table,name=WriteLatency,*",
 "org.apache.cassandra.metrics:type=Table,name=ReadLatency,*",
+"org.apache.cassandra.net:type=FailureDetector,*",
 ]
 #blacklistObjectNames: ["org.apache.cassandra.metrics:type=ColumnFamily,*"]
 rules:
@@ -73,6 +74,8 @@ rules:
       address: "$2"
   - pattern: org.apache.cassandra.metrics<type=(ColumnFamily), name=(RangeLatency)><>(Mean)
     name: cassandra_$1_$2_$3
+  - pattern: org.apache.cassandra.net<type=(FailureDetector)><>(DownEndpointCount)
+    name: cassandra_$1_$2
   - pattern: org.apache.cassandra.metrics<type=(Keyspace), keyspace=(\S*), name=(\S*)><>(Count|Mean|95thPercentile)
     name: cassandra_$1_$3_$4
     labels:
